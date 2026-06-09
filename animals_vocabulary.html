@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animals Vocabulary — EN / FR</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2E7D52;
+    --green-light: #E8F5EE;
+    --green-mid: #A8D5BB;
+    --yellow: #F5C842;
+    --yellow-light: #FEF8E0;
+    --bg: #F7FAF8;
+    --white: #FFFFFF;
+    --text: #1A2E22;
+    --text-muted: #5A7A66;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 12px rgba(46,125,82,0.10);
+    --shadow-hover: 0 4px 20px rgba(46,125,82,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  header {
+    background: var(--green);
+    color: #fff;
+    padding: 2rem 1.5rem 1.5rem;
+    text-align: center;
+  }
+  header .emoji-banner { font-size: 2.2rem; margin-bottom: 0.5rem; letter-spacing: 4px; }
+  header h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; }
+  header p { font-size: 1rem; opacity: 0.85; margin-top: 0.3rem; }
+
+  /* NAV TABS */
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 1rem 1rem 0;
+    flex-wrap: wrap;
+    background: var(--green);
+  }
+  .tab-btn {
+    padding: 9px 20px;
+    border-radius: 30px;
+    border: none;
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+  }
+  .tab-btn:hover { background: rgba(255,255,255,0.32); }
+  .tab-btn.active { background: var(--yellow); color: var(--text); }
+
+  /* MAIN */
+  main { max-width: 720px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* SCORE PILL */
+  .score-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-light);
+    color: var(--green);
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 5px 14px;
+    border-radius: 30px;
+    margin-bottom: 1.2rem;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--green);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* BUTTONS */
+  .btn {
+    padding: 9px 20px;
+    border-radius: 30px;
+    border: 2px solid var(--green);
+    background: transparent;
+    color: var(--green);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn:hover { background: var(--green-light); }
+  .btn.primary { background: var(--green); color: #fff; }
+  .btn.primary:hover { background: #256344; }
+  .btn.yellow { background: var(--yellow); border-color: var(--yellow); color: var(--text); }
+  .btn.yellow:hover { background: #e8b930; border-color: #e8b930; }
+
+  /* TOGGLE ROW */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+  .toggle-label { font-size: 0.88rem; color: var(--text-muted); font-weight: 600; }
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+  }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: var(--green-mid);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .toggle-switch input:checked + .toggle-track { background: var(--green); }
+  .toggle-track::after {
+    content: '';
+    position: absolute;
+    left: 3px; top: 3px;
+    width: 18px; height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s;
+  }
+  .toggle-switch input:checked + .toggle-track::after { transform: translateX(20px); }
+
+  /* ===== FLASHCARDS ===== */
+  .fc-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .fc-counter { font-size: 0.9rem; font-weight: 700; color: var(--text-muted); }
+  .fc-hint { font-size: 0.82rem; color: var(--text-muted); }
+
+  .flashcard-wrap {
+    perspective: 900px;
+    cursor: pointer;
+    margin-bottom: 1.2rem;
+    height: 180px;
+  }
+  .flashcard {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.48s cubic-bezier(.4,0,.2,1);
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .fc-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .fc-front { background: var(--green-light); border: 2px solid var(--green-mid); }
+  .fc-back { background: var(--yellow-light); border: 2px solid var(--yellow); transform: rotateY(180deg); }
+  .fc-word { font-size: 2rem; font-weight: 800; color: var(--text); text-align: center; }
+  .fc-lang { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
+
+  .fc-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+  .dots {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green-mid);
+    transition: background 0.2s, transform 0.2s;
+  }
+  .dot.current { background: var(--green); transform: scale(1.3); }
+  .dot.seen { background: var(--yellow); }
+
+  /* ===== QCM ===== */
+  .qcm-direction { font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 0.6rem; }
+  .qcm-question { font-size: 1.6rem; font-weight: 800; color: var(--text); margin-bottom: 1.2rem; text-align: center; }
+  .qcm-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+  .opt {
+    padding: 13px 16px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--green-mid);
+    background: var(--white);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.14s;
+    text-align: left;
+  }
+  .opt:hover:not(:disabled) { border-color: var(--green); background: var(--green-light); }
+  .opt.correct { background: #D4EDDA; border-color: #28A745; color: #155724; }
+  .opt.wrong { background: #F8D7DA; border-color: #DC3545; color: #721C24; }
+  .qcm-feedback { min-height: 22px; font-size: 1rem; font-weight: 700; text-align: center; }
+  .feedback-ok { color: #28A745; }
+  .feedback-ko { color: #DC3545; }
+
+  /* ===== MATCHING ===== */
+  .match-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+  .match-col { display: flex; flex-direction: column; gap: 8px; }
+  .match-col-title { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .match-item {
+    padding: 11px 14px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--green-mid);
+    background: var(--white);
+    color: var(--text);
+    font-size: 0.97rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.14s;
+    user-select: none;
+  }
+  .match-item:hover:not(.matched):not(.disabled) { border-color: var(--green); background: var(--green-light); }
+  .match-item.selected { border-color: var(--green); background: var(--green-light); box-shadow: 0 0 0 3px rgba(46,125,82,0.2); }
+  .match-item.matched { background: #D4EDDA; border-color: #28A745; color: #155724; cursor: default; }
+  .match-item.error { background: #F8D7DA; border-color: #DC3545; }
+
+  /* ===== TYPING ===== */
+  .type-question { font-size: 1.6rem; font-weight: 800; color: var(--text); margin-bottom: 1rem; text-align: center; }
+  .type-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--green-mid);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--white);
+    outline: none;
+    margin-bottom: 10px;
+    transition: border-color 0.15s;
+  }
+  .type-input:focus { border-color: var(--green); }
+  .type-input.ok { border-color: #28A745; background: #D4EDDA; color: #155724; }
+  .type-input.ko { border-color: #DC3545; background: #F8D7DA; color: #721C24; }
+  .type-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .type-feedback { min-height: 22px; font-size: 1rem; font-weight: 700; margin-top: 10px; }
+
+  /* ===== WORDLIST ===== */
+  .wl-search {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--green-mid);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.97rem;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--white);
+    outline: none;
+    margin-bottom: 1rem;
+    transition: border-color 0.15s;
+  }
+  .wl-search:focus { border-color: var(--green); }
+  .wl-table { width: 100%; border-collapse: collapse; }
+  .wl-table th {
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    padding: 6px 10px;
+    border-bottom: 2px solid var(--green-light);
+  }
+  .wl-table td {
+    padding: 9px 10px;
+    font-size: 0.97rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--green-light);
+    color: var(--text);
+  }
+  .wl-table tr:last-child td { border-bottom: none; }
+  .wl-table tr:hover td { background: var(--green-light); }
+  .wl-en { color: var(--text); }
+  .wl-fr { color: var(--green); font-style: italic; }
+
+  /* CONFETTI bar */
+  .confetti-bar {
+    display: none;
+    background: var(--yellow-light);
+    border: 2px solid var(--yellow);
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .confetti-bar.show { display: block; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--green-light);
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 500px) {
+    .qcm-options { grid-template-columns: 1fr; }
+    .match-grid { grid-template-columns: 1fr; }
+    .fc-word { font-size: 1.5rem; }
+    .qcm-question, .type-question { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="emoji-banner">🐘 🦋 🐸 🦜 🐬</div>
+  <h1>Animals Vocabulary</h1>
+  <p>English &amp; French — 24 words</p>
+</header>
+
+<nav>
+  <button class="tab-btn active" onclick="showTab('flashcards')">🃏 Flashcards</button>
+  <button class="tab-btn" onclick="showTab('qcm')">🎯 Quiz</button>
+  <button class="tab-btn" onclick="showTab('matching')">🔗 Matching</button>
+  <button class="tab-btn" onclick="showTab('typing')">✏️ Écriture</button>
+  <button class="tab-btn" onclick="showTab('wordlist')">📋 Liste</button>
+</nav>
+
+<main>
+
+<!-- FLASHCARDS -->
+<div class="section active" id="sec-flashcards">
+  <div class="card">
+    <div class="section-title">🃏 Flashcards</div>
+    <div class="toggle-row">
+      <span class="toggle-label">EN → FR</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="fc-rev" onchange="fcRevChanged()">
+        <span class="toggle-track"></span>
+      </label>
+      <span class="toggle-label">FR → EN</span>
+    </div>
+    <div class="fc-meta">
+      <span class="fc-counter" id="fc-counter">1 / 24</span>
+      <span class="fc-hint">👆 Clique pour retourner</span>
+    </div>
+    <div class="flashcard-wrap" onclick="flipCard()">
+      <div class="flashcard" id="fc">
+        <div class="fc-face fc-front">
+          <div class="fc-word" id="fc-front-word">beetle</div>
+          <div class="fc-lang" id="fc-front-lang">English</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-word" id="fc-back-word">scarabée</div>
+          <div class="fc-lang" id="fc-back-lang">Français</div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="btn" onclick="fcGo(-1)">← Préc.</button>
+      <div class="dots" id="fc-dots"></div>
+      <button class="btn" onclick="fcGo(1)">Suiv. →</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn yellow" onclick="fcShuffle()">🔀 Mélanger</button>
+      <button class="btn" onclick="fcReset()">↺ Recommencer</button>
+    </div>
+  </div>
+</div>
+
+<!-- QCM -->
+<div class="section" id="sec-qcm">
+  <div class="card">
+    <div class="section-title">🎯 Quiz — QCM</div>
+    <div class="toggle-row">
+      <span class="toggle-label">EN → FR</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="qcm-rev" onchange="newQCM()">
+        <span class="toggle-track"></span>
+      </label>
+      <span class="toggle-label">FR → EN</span>
+    </div>
+    <div class="score-pill" id="qcm-score-pill">⭐ Score : 0 / 0</div>
+    <div class="qcm-direction" id="qcm-dir-label">EN → FR</div>
+    <div class="qcm-question" id="qcm-question">—</div>
+    <div class="qcm-options" id="qcm-options"></div>
+    <div class="qcm-feedback" id="qcm-feedback"></div>
+  </div>
+</div>
+
+<!-- MATCHING -->
+<div class="section" id="sec-matching">
+  <div class="card">
+    <div class="section-title">🔗 Matching</div>
+    <div class="confetti-bar" id="match-success">🎉 Parfait ! Toutes les paires trouvées !</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:1rem;">
+      <div class="score-pill" id="match-score-pill">🔗 Paires : 0 / 6</div>
+      <button class="btn" onclick="newMatch()">↺ Nouveau round</button>
+    </div>
+    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.8rem;">Clique sur un mot anglais, puis son équivalent français.</p>
+    <div class="match-grid">
+      <div>
+        <div class="match-col-title">🇬🇧 English</div>
+        <div class="match-col" id="match-left"></div>
+      </div>
+      <div>
+        <div class="match-col-title">🇫🇷 Français</div>
+        <div class="match-col" id="match-right"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TYPING -->
+<div class="section" id="sec-typing">
+  <div class="card">
+    <div class="section-title">✏️ Écriture</div>
+    <div class="toggle-row">
+      <span class="toggle-label">EN → FR</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="type-rev" onchange="newTyping()">
+        <span class="toggle-track"></span>
+      </label>
+      <span class="toggle-label">FR → EN</span>
+    </div>
+    <div class="score-pill" id="type-score-pill">⭐ Score : 0 / 0</div>
+    <div class="qcm-direction" id="type-dir-label">Traduis en français :</div>
+    <div class="type-question" id="type-question">—</div>
+    <input class="type-input" id="type-input" type="text" placeholder="Ta traduction ici…" autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkTyping()">
+    <div class="type-actions">
+      <button class="btn primary" onclick="checkTyping()">Vérifier ✓</button>
+      <button class="btn" onclick="newTyping()">Passer →</button>
+    </div>
+    <div class="type-feedback" id="type-feedback"></div>
+  </div>
+</div>
+
+<!-- WORDLIST -->
+<div class="section" id="sec-wordlist">
+  <div class="card">
+    <div class="section-title">📋 Liste complète</div>
+    <input class="wl-search" id="wl-search" type="text" placeholder="🔍 Chercher un mot…" oninput="filterList()">
+    <table class="wl-table">
+      <thead>
+        <tr>
+          <th>🇬🇧 English</th>
+          <th>🇫🇷 Français</th>
+        </tr>
+      </thead>
+      <tbody id="wl-body"></tbody>
+    </table>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  Animals vocabulary · Secondaire 1 · English course
+</footer>
+
+<script>
+const animals = [
+  ["beetle","scarabée"],["butterfly","papillon"],["chick","poussin"],["chimpanzee","chimpanzé"],
+  ["cow","vache"],["crocodile","crocodile"],["dolphin","dauphin"],["frog","grenouille"],
+  ["goat","chèvre"],["gorilla","gorille"],["hen","poule"],["hippo","hippopotame"],
+  ["kitten","chaton"],["lizard","lézard"],["monkey","singe"],["owl","chouette / hibou"],
+  ["parrot","perroquet"],["pig","cochon"],["puppy","chiot"],["rhino","rhinocéros"],
+  ["shark","requin"],["snake","serpent"],["spider","araignée"],["whale","baleine"]
+];
+
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
+function norm(s){return s.trim().toLowerCase().replace(/[,\/]/g,'').replace(/\s+/g,' ');}
+
+/* TABS */
+function showTab(id){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    b.classList.toggle('active',['flashcards','qcm','matching','typing','wordlist'][i]===id);
+  });
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+}
+
+/* ===== FLASHCARDS ===== */
+let fcList=[...animals], fcIdx=0, fcFlipped=false;
+
+function fcRevChanged(){ fcFlipped=false; renderFC(); }
+
+function renderFC(){
+  const rev=document.getElementById('fc-rev').checked;
+  const [en,fr]=fcList[fcIdx];
+  document.getElementById('fc-front-word').textContent = rev?fr:en;
+  document.getElementById('fc-front-lang').textContent = rev?'Français':'English';
+  document.getElementById('fc-back-word').textContent = rev?en:fr;
+  document.getElementById('fc-back-lang').textContent = rev?'English':'Français';
+  document.getElementById('fc-counter').textContent=`${fcIdx+1} / ${fcList.length}`;
+  document.getElementById('fc').classList.toggle('flipped',fcFlipped);
+  // dots
+  const d=document.getElementById('fc-dots');
+  d.innerHTML=fcList.map((_,i)=>`<div class="dot${i===fcIdx?' current':i<fcIdx?' seen':''}"></div>`).join('');
+}
+
+function flipCard(){
+  fcFlipped=!fcFlipped;
+  document.getElementById('fc').classList.toggle('flipped',fcFlipped);
+}
+function fcGo(dir){
+  fcFlipped=false;
+  fcIdx=(fcIdx+dir+fcList.length)%fcList.length;
+  renderFC();
+}
+function fcShuffle(){ fcList=shuffle(fcList); fcIdx=0; fcFlipped=false; renderFC(); }
+function fcReset(){ fcList=[...animals]; fcIdx=0; fcFlipped=false; renderFC(); }
+
+renderFC();
+
+/* ===== QCM ===== */
+let qcmScore=0, qcmTotal=0, qcmDone=false;
+
+function newQCM(){
+  qcmDone=false;
+  const rev=document.getElementById('qcm-rev').checked;
+  const pool=shuffle(animals);
+  const correct=pool[0];
+  const opts=shuffle([correct,...pool.slice(1,4)]);
+  document.getElementById('qcm-dir-label').textContent=rev?'FR → EN : Choose the translation':'EN → FR : Choisis la traduction';
+  document.getElementById('qcm-question').textContent=rev?correct[1]:correct[0];
+  const c=document.getElementById('qcm-options');
+  c.innerHTML='';
+  opts.forEach(o=>{
+    const btn=document.createElement('button');
+    btn.className='opt';
+    btn.textContent=rev?o[0]:o[1];
+    btn.onclick=()=>{
+      if(qcmDone)return;
+      qcmDone=true; qcmTotal++;
+      const ok=rev?(o[0]===correct[0]):(o[1]===correct[1]);
+      if(ok){qcmScore++;btn.classList.add('correct');document.getElementById('qcm-feedback').innerHTML='<span class="feedback-ok">✓ Bravo !</span>';}
+      else{btn.classList.add('wrong');document.getElementById('qcm-feedback').innerHTML=`<span class="feedback-ko">✗ C'était : <strong>${rev?correct[0]:correct[1]}</strong></span>`;}
+      c.querySelectorAll('.opt').forEach(x=>{x.disabled=true;if(rev?(x.textContent===correct[0]):(x.textContent===correct[1]))x.classList.add('correct');});
+      document.getElementById('qcm-score-pill').textContent=`⭐ Score : ${qcmScore} / ${qcmTotal}`;
+      setTimeout(newQCM,1700);
+    };
+    c.appendChild(btn);
+  });
+  document.getElementById('qcm-feedback').textContent='';
+}
+newQCM();
+
+/* ===== MATCHING ===== */
+let matchPairs=[], matchSel=null, matchFound=0;
+
+function newMatch(){
+  matchSel=null; matchFound=0;
+  const pool=shuffle(animals).slice(0,6);
+  matchPairs=pool;
+  const lefts=shuffle(pool.map(p=>({val:p[0],idx:pool.indexOf(p)})));
+  const rights=shuffle(pool.map(p=>({val:p[1],idx:pool.indexOf(p)})));
+  const L=document.getElementById('match-left');
+  const R=document.getElementById('match-right');
+  L.innerHTML=''; R.innerHTML='';
+  document.getElementById('match-success').classList.remove('show');
+  document.getElementById('match-score-pill').textContent='🔗 Paires : 0 / 6';
+  lefts.forEach(item=>{
+    const d=document.createElement('div');
+    d.className='match-item'; d.textContent=item.val;
+    d.dataset.idx=item.idx; d.dataset.side='en';
+    d.onclick=()=>matchClick(d);
+    L.appendChild(d);
+  });
+  rights.forEach(item=>{
+    const d=document.createElement('div');
+    d.className='match-item'; d.textContent=item.val;
+    d.dataset.idx=item.idx; d.dataset.side='fr';
+    d.onclick=()=>matchClick(d);
+    R.appendChild(d);
+  });
+}
+
+function matchClick(el){
+  if(el.classList.contains('matched'))return;
+  if(!matchSel){matchSel=el;el.classList.add('selected');return;}
+  if(matchSel===el){el.classList.remove('selected');matchSel=null;return;}
+  if(matchSel.dataset.side===el.dataset.side){
+    matchSel.classList.remove('selected');matchSel=el;return;
+  }
+  if(matchSel.dataset.idx===el.dataset.idx){
+    [matchSel,el].forEach(x=>{x.classList.remove('selected');x.classList.add('matched');x.onclick=null;});
+    matchFound++;
+    document.getElementById('match-score-pill').textContent=`🔗 Paires : ${matchFound} / 6`;
+    if(matchFound===6)document.getElementById('match-success').classList.add('show');
+  } else {
+    const prev=matchSel;
+    [prev,el].forEach(x=>{x.classList.remove('selected');x.classList.add('error');});
+    setTimeout(()=>[prev,el].forEach(x=>x.classList.remove('error')),500);
+  }
+  matchSel=null;
+}
+newMatch();
+
+/* ===== TYPING ===== */
+let typeWord=null, typeScore=0, typeTotal=0;
+
+function newTyping(){
+  typeWord=animals[Math.floor(Math.random()*animals.length)];
+  const rev=document.getElementById('type-rev').checked;
+  document.getElementById('type-dir-label').textContent=rev?'Traduis en anglais :':'Traduis en français :';
+  document.getElementById('type-question').textContent=rev?typeWord[1]:typeWord[0];
+  const inp=document.getElementById('type-input');
+  inp.value=''; inp.className='type-input'; inp.disabled=false;
+  document.getElementById('type-feedback').textContent='';
+  setTimeout(()=>inp.focus(),50);
+}
+
+function checkTyping(){
+  const inp=document.getElementById('type-input');
+  if(inp.disabled||!inp.value.trim())return;
+  const rev=document.getElementById('type-rev').checked;
+  const correct=rev?typeWord[0]:typeWord[1];
+  const alts=correct.split(/[,\/]/).map(norm);
+  const ok=alts.includes(norm(inp.value));
+  typeTotal++;
+  inp.className='type-input '+(ok?'ok':'ko');
+  inp.disabled=true;
+  if(ok){typeScore++;document.getElementById('type-feedback').innerHTML='<span class="feedback-ok">✓ Correct !</span>';}
+  else{document.getElementById('type-feedback').innerHTML=`<span class="feedback-ko">✗ Réponse : <strong>${correct}</strong></span>`;}
+  document.getElementById('type-score-pill').textContent=`⭐ Score : ${typeScore} / ${typeTotal}`;
+  setTimeout(newTyping,1700);
+}
+
+newTyping();
+
+/* ===== WORDLIST ===== */
+function buildList(filter=''){
+  const tbody=document.getElementById('wl-body');
+  const f=filter.trim().toLowerCase();
+  const rows=animals.filter(([en,fr])=>!f||en.includes(f)||fr.includes(f));
+  tbody.innerHTML=rows.map(([en,fr])=>`<tr><td class="wl-en">${en}</td><td class="wl-fr">${fr}</td></tr>`).join('');
+}
+function filterList(){buildList(document.getElementById('wl-search').value);}
+buildList();
+</script>
+</body>
+</html>
